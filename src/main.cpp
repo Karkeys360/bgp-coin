@@ -11,33 +11,20 @@ std::uniform_int_distribution<int> uni(0, 3);
 
 std::map<int, int> generateTransactions(int MaxVal);
 
-void updateState(std::map<int, int> state, std::map<int, int> transaction);
-
-bool validateState(std::map<int, int> state, std::map<int, int> transaction);
-
 int main()
 {
     // Random ledger generation test
 
+    std::list<std::map<int,int>> transactions;
+
 
     for (int i = 2; i < 100000; i++) {
         std::map<int, int> temp = generateTransactions(i);
+        transactions.push_back(temp);
     }
 
-    // String hashing test
-
-    std::string src_str = "Hello World!";
-    std::string hash_str;
-
-    sha256::hash256_hex_string(src_str, hash_str);
-
-    std::cout << hash_str << std::endl << std::endl;
-
-    // Blockchain test
-
-    BlockChain b;
-    std::list<Block> l = b.getChain();
-
+    BlockChain blockChain;
+    blockChain.transactionsToBlocks(transactions);
 
     return 0;
 }
