@@ -122,6 +122,11 @@ void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
         if (counter == transactionLim || std::next(it) == trans.end()) {
             counter = 0;
             Block temp = makeBlock(transList, chain);
+            std::map<int,int> assumedState = checkChain(chain);
+            if (assumedState != state) {
+                std::cerr << "Computed state is not equal to the stored state :(" << std::endl;
+                exit(1);
+            }
             chain.push_back(temp);
             transList.clear();
         }
@@ -180,7 +185,7 @@ std::map<int, int> checkChain(std::list<Block> chain)
     checkBlockHash(*it);
     Block parent = *it;
     for (it = it++; it != chain.end(); it++) {
-        checkBlockValidity(*it, parent, state);
+        state = checkBlockValidity(*it, parent, state);
         parent = *it;
     }
     return state;
