@@ -115,7 +115,8 @@ void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
 
     state = currentState;
 }
-void updateState(std::map<int, int> state, std::map<int, int> transaction)
+
+void updateState(std::map<int, int> &state, std::map<int, int> transaction)
 {
     for (auto& it : transaction) {
         auto keyValPair = state.find(it.first);

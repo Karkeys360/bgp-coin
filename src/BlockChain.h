@@ -46,7 +46,7 @@ class BlockChain
 public:
     BlockChain();
 
-  void transactionsToBlocks(std::list<std::map<int, int>> trans);
+    void transactionsToBlocks(std::list<std::map<int, int>> trans);
 
 
     std::list<Block> getChain();
@@ -56,7 +56,7 @@ private:
     std::map<int, int> state;
 };
 
-void updateState(std::map<int, int> state, std::map<int, int> transaction);
+void updateState(std::map<int, int> &state, std::map<int, int> transaction);
 
 bool validateState(std::map<int, int> state, std::map<int, int> transaction);
 
