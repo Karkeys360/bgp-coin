@@ -1,16 +1,14 @@
 #include "BlockChain.h"
 
 BlockContents::BlockContents(int block_number, std::string parent_hash, int transaction_count,
-                             std::list<std::map<int, int>> transactions)
-{
+                             std::list<std::map<int, int>> transactions) {
     this->block_number = block_number;
     this->parent_hash = parent_hash;
     this->transaction_count = transaction_count;
     this->transactions = transactions;
 }
 
-std::string BlockContents::hash_contents()
-{
+std::string BlockContents::hash_contents() {
     std::string hash_transactions;
     std::string hash_contents;
 
@@ -31,20 +29,17 @@ std::string BlockContents::hash_contents()
     return hash_contents;
 }
 
-BlockContents::BlockContents(const BlockContents& contents) : transactions(contents.transactions)
-{
+BlockContents::BlockContents(const BlockContents &contents) : transactions(contents.transactions) {
     this->block_number = contents.block_number;
     this->parent_hash = contents.parent_hash;
     this->transaction_count = contents.transaction_count;
 }
 
-int BlockContents::getBlockNumber()
-{
+int BlockContents::getBlockNumber() {
     return this->block_number;
 }
 
-void BlockContents::dump()
-{
+void BlockContents::dump() {
     std::cerr << "Block Number: " << block_number << std::endl;
     std::cerr << "Parent Hash: " << parent_hash << std::endl;
     std::cerr << "Transaction Count: " << transaction_count << std::endl;
@@ -59,31 +54,30 @@ void BlockContents::dump()
     }
 }
 
-std::string BlockContents::getParentHash()
-{
-    return this->parent_hash;
+std::list<std::map<int, int>> BlockContents::getTransactions() {
+    return this->transactions;
 }
 
-Block::Block(std::string new_hash, BlockContents new_contents) : contents(new_contents)
-{
+Block::Block(std::string new_hash, BlockContents new_contents) : contents(new_contents) {
     this->block_hash = new_hash;
 }
 
-std::string Block::getHash()
-{
+std::string Block::getHash() {
     return this->block_hash;
 }
 
-BlockContents Block::getContents()
-{
+BlockContents Block::getContents() {
     return this->contents;
 }
 
-BlockChain::BlockChain()
-{
+std::map<int, int> BlockChain::getState() {
+    return this->state;
+}
+
+BlockChain::BlockChain() {
     std::map<int, int> start_state = {{1, 100000000},
                                       {2, 100000000}};
-    this -> state = start_state;
+    this->state = start_state;
     std::list<std::map<int, int>> genesis_block_transactions;
     genesis_block_transactions.push_back(start_state);
 
@@ -97,8 +91,7 @@ BlockChain::BlockChain()
 }
 
 
-void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
-{
+void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans) {
     std::map<int, int> currentState = state;
     int transactionLim = 3; // transactions per block
     int counter = 0;
@@ -121,9 +114,8 @@ void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
     state = currentState;
 }
 
-void updateState(std::map<int, int> &state, std::map<int, int> transaction)
-{
-    for (auto& it : transaction) {
+void updateState(std::map<int, int> &state, std::map<int, int> transaction) {
+    for (auto &it : transaction) {
         auto keyValPair = state.find(it.first);
         if (keyValPair != state.end()) {
             keyValPair->second += it.second;
@@ -133,11 +125,10 @@ void updateState(std::map<int, int> &state, std::map<int, int> transaction)
     }
 }
 
-bool validateState(std::map<int, int> state, std::map<int, int> transaction)
-{
+bool validateState(std::map<int, int> state, std::map<int, int> transaction) {
     bool returner = true;
     int total = 0;
-    for (auto& it : transaction) {
+    for (auto &it : transaction) {
         total += it.second;
         auto keyValPair = state.find(it.first);
         if (keyValPair != state.end() && keyValPair->second < it.second * -1) {
@@ -150,8 +141,7 @@ bool validateState(std::map<int, int> state, std::map<int, int> transaction)
     return returner;
 }
 
-Block makeBlock(std::list<std::map<int, int>> transactions, std::list<Block> chain)
-{
+Block makeBlock(std::list<std::map<int, int>> transactions, std::list<Block> chain) {
     Block parent_block = *chain.rbegin();
     std::string parent_hash = parent_block.getHash();
     int block_number = parent_block.getContents().getBlockNumber() + 1;
@@ -163,8 +153,19 @@ Block makeBlock(std::list<std::map<int, int>> transactions, std::list<Block> cha
     return output;
 }
 
-std::list<Block> BlockChain::getChain()
-{
+std::map<int,int> checkChain(std::list<Block> chain){
+   auto it = chain.begin();
+   std::map<int,int> state = *(it->getContents().getTransactions().begin());
+    checkBlockHash(*it);
+    Block parent = *it;
+    for(it = it++ ; it != chain.end(); it++){
+        checkBlockValidity(*it, parent,state);
+        parent = *it;
+    }
+    return state;
+}
+
+std::list<Block> BlockChain::getChain() {
     return chain;
 }
 
@@ -183,7 +184,7 @@ std::map<int, int> checkBlockValidity(Block block, Block parent, std::map<int, i
 
     for (auto transaction : block.getContents().getTransactions()) {
         if (validateState(state, transaction)) {
-            updateState(state, transaction)
+            updateState(state, transaction);
         } else {
             throw 1;
         }
