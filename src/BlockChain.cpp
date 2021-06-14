@@ -76,8 +76,8 @@ BlockContents Block::getContents()
 
 BlockChain::BlockChain()
 {
-    std::map<int, int> state = {{1, 5},
-                                {2, 5}};
+    std::map<int, int> state = {{1, 100000000},
+                                {2, 100000000}};
     std::list<std::map<int, int>> genesis_block_transactions;
     genesis_block_transactions.push_back(state);
 
@@ -87,31 +87,74 @@ BlockChain::BlockChain()
     Block genesis_block(genesis_hash, genesis_block_contents);
 
     this->chain.push_back(genesis_block);
+
 }
 
 
-//void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
-//{
-//    std::map<int, int> currentState = state;
-//    int transactionLim = 3; // transactions per block
-//    int counter = 0;
-//    std::list<std::map<int, int>> transList;
-//    for (auto it = trans.begin(); it != trans.end(); it++) {
-//        if (validateState(currentState, *it)) {
-//            updateState(currentState, *it);
-//            transList.push_back(*it);
-//            counter++;
-//        }
-//        if (counter == transactionLim) {
-//            counter = 0;
-//            makeBlock(transList, chain);
-//            transList.clear();
-//        }
-//
-//    }
-//
-//    state = currentState;
-//}
+void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
+{
+    std::map<int, int> currentState = state;
+    int transactionLim = 3; // transactions per block
+    int counter = 0;
+    std::list<std::map<int, int>> transList;
+    for (auto it = trans.begin(); it != trans.end(); it++) {
+        if (validateState(currentState, *it)) {
+            updateState(currentState, *it);
+            transList.push_back(*it);
+            counter++;
+        }
+        if (counter == transactionLim) {
+            counter = 0;
+            makeBlock(transList, chain);
+            transList.clear();
+        }
+
+    }
+
+    state = currentState;
+}
+void updateState(std::map<int, int> state, std::map<int, int> transaction)
+{
+    for (auto& it : transaction) {
+        auto keyValPair = state.find(it.first);
+        if (keyValPair != state.end()) {
+            keyValPair->second += it.second;
+        } else {
+            state.insert({it.first, it.second});
+        }
+    }
+}
+
+bool validateState(std::map<int, int> state, std::map<int, int> transaction)
+{
+    bool returner = true;
+    int total = 0;
+    for (auto& it : transaction) {
+        total += it.second;
+        auto keyValPair = state.find(it.first);
+        if (keyValPair != state.end() && keyValPair->second < it.second * -1) {
+            returner = false;
+        }
+    }
+    if (total != 0) {
+        returner = false;
+    }
+    return returner;
+}
+
+Block makeBlock(std::list<std::map<int, int>> transactions, std::list<Block> chain)
+{
+    Block parent_block = *chain.rbegin();
+    std::string parent_hash = parent_block.getHash();
+    int block_number = parent_block.getContents().getBlockNumber() + 1;
+    int transaction_count = transactions.size();
+    BlockContents contents(block_number, parent_hash, transaction_count, transactions);
+    std::string block_hash = contents.hash_contents();
+
+    Block output(block_hash, contents);
+    return output;
+}
+
 
 
 std::list<Block> BlockChain::getChain()

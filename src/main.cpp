@@ -11,10 +11,6 @@ std::uniform_int_distribution<int> uni(0, 3);
 
 std::map<int, int> generateTransactions(int MaxVal);
 
-void updateState(std::map<int, int> state, std::map<int, int> transaction);
-
-bool validateState(std::map<int, int> state, std::map<int, int> transaction);
-
 int main()
 {
     // Random ledger generation test
