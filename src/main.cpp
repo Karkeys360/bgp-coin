@@ -26,6 +26,11 @@ int main()
     BlockChain blockChain;
     blockChain.transactionsToBlocks(transactions);
 
+    for(auto it = blockChain.getChain().begin(); i < blockChain.getChain().end(); it++){
+        BlockContents contents = it -> getContents();
+        contents.dump();
+    }
+
     return 0;
 }
 
