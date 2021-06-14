@@ -31,12 +31,11 @@ std::string BlockContents::hash_contents()
     return hash_contents;
 }
 
-BlockContents::BlockContents(const BlockContents& contents)
+BlockContents::BlockContents(const BlockContents& contents) : transactions(contents.transactions)
 {
     this->block_number = contents.block_number;
     this->parent_hash = contents.parent_hash;
     this->transaction_count = contents.transaction_count;
-    std::copy(contents.transactions.begin(), contents.transactions.end(), this->transactions.begin());
 }
 
 int BlockContents::getBlockNumber()
