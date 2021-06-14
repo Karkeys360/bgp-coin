@@ -26,7 +26,7 @@ int main()
     std::string src_str = "Hello World!";
     std::string hash_str;
 
-    picosha2::hash256_hex_string(src_str, hash_str);
+    sha256::hash256_hex_string(src_str, hash_str);
 
     std::cout << hash_str << std::endl;
 
