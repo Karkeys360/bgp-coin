@@ -44,4 +44,3 @@ std::map<std::string, int> generateTransactions(int MaxVal)
                                        {"Person2", amount * -1}};
     return vals;
 }
-
