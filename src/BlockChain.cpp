@@ -123,15 +123,17 @@ void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
             counter = 0;
             Block temp = makeBlock(transList, chain);
             chain.push_back(temp);
-            std::map<int,int> assumedState = checkChain(chain);
+            std::map<int, int> assumedState = checkChain(chain);
             if (assumedState != currentState) {
                 std::cerr << "Computed state is not equal to the stored state :(" << std::endl;
                 exit(1);
             }
+            chain.push_back(temp);
             transList.clear();
         }
 
     }
+
     state = currentState;
 }
 
@@ -229,7 +231,7 @@ std::map<int, int> checkBlockValidity(Block block, Block parent, std::map<int, i
         exit(1);
     }
 
-    if (block.getContents().getParentHash() != parent_hash && block_number !=0 ) {
+    if (block.getContents().getParentHash() != parent_hash && block_number != 0) {
         std::cerr << "Parent hash of block no. " << block.getContents().getBlockNumber()
                   << " does not match with its child's record :(" << std::endl;
         exit(1);

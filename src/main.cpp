@@ -1,6 +1,5 @@
 #include <iostream>
 #include <map>
-#include <string>
 #include <random>
 #include "../lib/sha256.h"
 #include "BlockChain.h"
@@ -18,7 +17,7 @@ int main()
     std::list<std::map<int, int>> transactions;
 
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 8; i++) {
         std::map<int, int> temp = generateTransactions(i);
         transactions.push_back(temp);
     }
