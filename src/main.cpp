@@ -3,6 +3,7 @@
 #include <string>
 #include <random>
 #include "../lib/sha256.h"
+#include "BlockChain.h"
 
 
 std::mt19937_64 rng;
@@ -10,10 +11,12 @@ std::uniform_int_distribution<int> uni(0, 3);
 
 std::map<int, int> generateTransactions(int MaxVal);
 
-void updateState(std::map<int,int> state, std::map<int,int> transaction);
-bool validateState(std::map<int,int> state, std::map<int,int> transaction);
+void updateState(std::map<int, int> state, std::map<int, int> transaction);
 
-int main() {
+bool validateState(std::map<int, int> state, std::map<int, int> transaction);
+
+int main()
+{
     // Random ledger generation test
 
 
@@ -28,12 +31,19 @@ int main() {
 
     sha256::hash256_hex_string(src_str, hash_str);
 
-    std::cout << hash_str << std::endl;
+    std::cout << hash_str << std::endl << std::endl;
+
+    // Blockchain test
+
+    BlockChain b;
+    std::list<Block> l = b.getChain();
+
 
     return 0;
 }
 
-std::map<int, int> generateTransactions(int MaxVal) {
+std::map<int, int> generateTransactions(int MaxVal)
+{
     std::uniform_int_distribution<int> distro(0, MaxVal);
     int random_bit = uni(rng);
     int random_integer = distro(rng);

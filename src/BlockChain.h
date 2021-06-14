@@ -1,6 +1,7 @@
 #ifndef BGP_COIN_BLOCKCHAIN_H
 #define BGP_COIN_BLOCKCHAIN_H
 
+#include <iostream>
 #include <map>
 #include <list>
 #include "../lib/sha256.h"
@@ -13,12 +14,13 @@ public:
 
     BlockContents(const BlockContents& contents);
 
+    void dump();
+
     int getBlockNumber();
 
     std::string hash_contents();
 
 private:
-
     int block_number;
     std::string parent_hash;
     int transaction_count;
@@ -41,10 +43,13 @@ private:
 
 class BlockChain
 {
+public:
     BlockChain();
-    void transactionsToBlocks(std::list<std::map<int,int>> trans);
+
+    void transactionsToBlocks(std::list<std::map<int, int>> trans);
 
 
+    std::list<Block> getChain();
 
 private:
     std::list<Block> chain;

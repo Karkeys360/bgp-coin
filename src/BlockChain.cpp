@@ -1,14 +1,16 @@
 #include "BlockChain.h"
 
 BlockContents::BlockContents(int block_number, std::string parent_hash, int transaction_count,
-                             std::list<std::map<int, int>> transactions) {
+                             std::list<std::map<int, int>> transactions)
+{
     this->block_number = block_number;
     this->parent_hash = parent_hash;
     this->transaction_count = transaction_count;
     this->transactions = transactions;
 }
 
-std::string BlockContents::hash_contents() {
+std::string BlockContents::hash_contents()
+{
     std::string hash_transactions;
     std::string hash_contents;
 
@@ -29,30 +31,52 @@ std::string BlockContents::hash_contents() {
     return hash_contents;
 }
 
-BlockContents::BlockContents(const BlockContents &contents) {
+BlockContents::BlockContents(const BlockContents& contents)
+{
     this->block_number = contents.block_number;
     this->parent_hash = contents.parent_hash;
     this->transaction_count = contents.transaction_count;
     std::copy(contents.transactions.begin(), contents.transactions.end(), this->transactions.begin());
 }
 
-int BlockContents::getBlockNumber() {
+int BlockContents::getBlockNumber()
+{
     return this->block_number;
 }
 
-Block::Block(std::string new_hash, BlockContents new_contents) : contents(new_contents) {
+void BlockContents::dump()
+{
+    std::cerr << "Block Number: " << block_number << std::endl;
+    std::cerr << "Parent Hash: " << parent_hash << std::endl;
+    std::cerr << "Transaction Count: " << transaction_count << std::endl;
+    std::cerr << "Transactions: " << std::endl;
+
+    for (auto transaction : transactions) {
+        std::cout << "New Transaction:" << std::endl;
+        for (auto change : transaction) {
+            std::cout << change.first << ": " << change.second << std::endl;
+        }
+        std::cout << std::endl;
+    }
+}
+
+Block::Block(std::string new_hash, BlockContents new_contents) : contents(new_contents)
+{
     this->block_hash = new_hash;
 }
 
-std::string Block::getHash() {
+std::string Block::getHash()
+{
     return this->block_hash;
 }
 
-BlockContents Block::getContents() {
+BlockContents Block::getContents()
+{
     return this->contents;
 }
 
-BlockChain::BlockChain() {
+BlockChain::BlockChain()
+{
     std::map<int, int> state = {{1, 5},
                                 {2, 5}};
     std::list<std::map<int, int>> genesis_block_transactions;
@@ -67,7 +91,8 @@ BlockChain::BlockChain() {
 }
 
 
-void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans) {
+void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
+{
     std::map<int, int> currentState = state;
     int transactionLim = 3; // transactions per block
     int counter = 0;
@@ -90,4 +115,7 @@ void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans) {
 }
 
 
-
+std::list<Block> BlockChain::getChain()
+{
+    return chain;
+}
