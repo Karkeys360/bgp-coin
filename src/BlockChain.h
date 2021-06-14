@@ -18,6 +18,7 @@ public:
     std::string hash_contents();
 
 private:
+
     int block_number;
     std::string parent_hash;
     int transaction_count;
@@ -41,9 +42,13 @@ private:
 class BlockChain
 {
     BlockChain();
+    void transactionsToBlocks(std::list<std::map<int,int>> trans);
+
+
 
 private:
     std::list<Block> chain;
+    std::map<int, int> state;
 };
 
 void updateState(std::map<int, int> state, std::map<int, int> transaction)
