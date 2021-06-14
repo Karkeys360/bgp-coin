@@ -76,10 +76,11 @@ BlockContents Block::getContents()
 
 BlockChain::BlockChain()
 {
-    std::map<int, int> state = {{1, 100000000},
-                                {2, 100000000}};
+    std::map<int, int> start_state = {{1, 100000000},
+                                      {2, 100000000}};
+    this -> state = start_state;
     std::list<std::map<int, int>> genesis_block_transactions;
-    genesis_block_transactions.push_back(state);
+    genesis_block_transactions.push_back(start_state);
 
     BlockContents genesis_block_contents(0, "", 1, genesis_block_transactions);
     std::string genesis_hash = genesis_block_contents.hash_contents();
@@ -103,9 +104,10 @@ void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
             transList.push_back(*it);
             counter++;
         }
-        if (counter == transactionLim) {
+        if (counter == transactionLim || std::next(it) == trans.end()) {
             counter = 0;
-            makeBlock(transList, chain);
+            Block temp = makeBlock(transList, chain);
+            chain.push_back(temp);
             transList.clear();
         }
 

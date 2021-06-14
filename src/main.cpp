@@ -18,27 +18,17 @@ int main()
     std::list<std::map<int,int>> transactions;
 
 
-    for (int i = 2; i < 100000; i++) {
+    for (int i = 0; i < 10; i++) {
         std::map<int, int> temp = generateTransactions(i);
         transactions.push_back(temp);
     }
+    BlockChain blockChain;
+    blockChain.transactionsToBlocks(transactions);
 
-    // String hashing test
+    std::list<Block> chain = blockChain.getChain();
 
-    std::string src_str = "Hello World!";
-    std::string hash_str;
-
-    picosha2::hash256_hex_string(src_str, hash_str);
-
-    std::cout << hash_str << std::endl << std::endl;
-
-    // Blockchain test
-
-    BlockChain b;
-    std::list<Block> l = b.getChain();
-    for (Block block : l) {
-        std::cout << "Block Hash: " << block.getHash() << std::endl;
-        block.getContents().dump();
+    for(auto it = chain.begin(); it != chain.end(); it++){
+        it->getContents().dump();
     }
 
     return 0;
