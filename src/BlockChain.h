@@ -20,7 +20,7 @@ public:
 
     std::string getParentHash();
 
-    std::list<std::map<int,int>> getTransactions();
+    std::list<std::map<int, int>> getTransactions();
 
     std::string hash_contents();
 
@@ -54,6 +54,7 @@ public:
 
 
     std::list<Block> getChain();
+
     std::map<int, int> getState();
 
 private:
@@ -61,7 +62,7 @@ private:
     std::map<int, int> state;
 };
 
-void updateState(std::map<int, int> &state, std::map<int, int> transaction);
+void updateState(std::map<int, int>& state, std::map<int, int> transaction);
 
 bool validateState(std::map<int, int> state, std::map<int, int> transaction);
 
@@ -71,6 +72,6 @@ void checkBlockHash(Block block);
 
 std::map<int, int> checkBlockValidity(Block block, Block parent, std::map<int, int> state);
 
-std::map<int,int> checkChain(std::list<Block> chain);
+std::map<int, int> checkChain(std::list<Block> chain);
 
 #endif //BGP_COIN_BLOCKCHAIN_H
