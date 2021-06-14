@@ -122,17 +122,16 @@ void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
         if (counter == transactionLim || std::next(it) == trans.end()) {
             counter = 0;
             Block temp = makeBlock(transList, chain);
+            chain.push_back(temp);
             std::map<int,int> assumedState = checkChain(chain);
-            if (assumedState != state) {
+            if (assumedState != currentState) {
                 std::cerr << "Computed state is not equal to the stored state :(" << std::endl;
                 exit(1);
             }
-            chain.push_back(temp);
             transList.clear();
         }
 
     }
-
     state = currentState;
 }
 
@@ -184,7 +183,7 @@ std::map<int, int> checkChain(std::list<Block> chain)
     std::map<int, int> state = *(it->getContents().getTransactions().begin());
     checkBlockHash(*it);
     Block parent = *it;
-    for (it = it++; it != chain.end(); it++) {
+    for (it++; it != chain.end(); it++) {
         state = checkBlockValidity(*it, parent, state);
         parent = *it;
     }
@@ -214,7 +213,7 @@ std::map<int, int> checkBlockValidity(Block block, Block parent, std::map<int, i
     int block_number = block.getContents().getBlockNumber();
 
     for (auto transaction : block.getContents().getTransactions()) {
-        if (validateState(state, transaction)) {
+        if (validateState(state, transaction) || block_number == 0) {
             updateState(state, transaction);
         } else {
             std::cerr << "Invalid transaction in block no. " << block.getContents().getBlockNumber() << std::endl;
@@ -224,13 +223,13 @@ std::map<int, int> checkBlockValidity(Block block, Block parent, std::map<int, i
 
     checkBlockHash(block);
 
-    if (block_number != (parent_block_number + 1)) {
+    if (block_number != (parent_block_number + 1) && block_number != 0) {
         std::cerr << "Block number " << block.getContents().getBlockNumber() << " does not match with its parent :("
                   << std::endl;
         exit(1);
     }
 
-    if (block.getContents().getParentHash() != parent_hash) {
+    if (block.getContents().getParentHash() != parent_hash && block_number !=0 ) {
         std::cerr << "Parent hash of block no. " << block.getContents().getBlockNumber()
                   << " does not match with its child's record :(" << std::endl;
         exit(1);
