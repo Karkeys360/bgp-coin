@@ -18,6 +18,8 @@ public:
 
     int getBlockNumber();
 
+    std::string getParentHash();
+
     std::string hash_contents();
 
 private:
@@ -61,5 +63,9 @@ void updateState(std::map<int, int> &state, std::map<int, int> transaction);
 bool validateState(std::map<int, int> state, std::map<int, int> transaction);
 
 Block makeBlock(std::list<std::map<int, int>> transactions, std::list<Block> chain);
+
+void checkBlockHash(Block block);
+
+std::map<int, int> checkBlockValidity(Block block, Block parent, std::map<int, int> state);
 
 #endif //BGP_COIN_BLOCKCHAIN_H

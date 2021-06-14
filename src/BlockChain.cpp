@@ -59,6 +59,11 @@ void BlockContents::dump()
     }
 }
 
+std::string BlockContents::getParentHash()
+{
+    return this->parent_hash;
+}
+
 Block::Block(std::string new_hash, BlockContents new_contents) : contents(new_contents)
 {
     this->block_hash = new_hash;
@@ -158,9 +163,41 @@ Block makeBlock(std::list<std::map<int, int>> transactions, std::list<Block> cha
     return output;
 }
 
-
-
 std::list<Block> BlockChain::getChain()
 {
     return chain;
+}
+
+void checkBlockHash(Block block) {
+    std::string expected_hash = block.getContents().hash_contents();
+
+    if (block.getHash() != expected_hash) {
+        throw 1;
+    }
+}
+
+std::map<int, int> checkBlockValidity(Block block, Block parent, std::map<int, int> state) {
+    int parent_block_number = parent.getContents().getBlockNumber();
+    std::string parent_hash = parent.getHash();
+    int block_number = block.getContents().getBlockNumber();
+
+    for (auto transaction : block.getContents().getTransactions()) {
+        if (validateState(state, transaction)) {
+            updateState(state, transaction)
+        } else {
+            throw 1;
+        }
+    }
+
+    checkBlockHash(block);
+
+    if (block_number != (parent_block_number + 1)) {
+        throw 1;
+    }
+
+    if (block.getContents().getParentHash() != parent_hash) {
+        throw 1;
+    }
+
+    return state;
 }
