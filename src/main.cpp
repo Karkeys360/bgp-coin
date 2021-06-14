@@ -32,32 +32,6 @@ int main() {
 
     return 0;
 }
-void updateState(std::map<int,int> state, std::map<int,int> transaction){
-        for (auto & it : transaction) {
-            auto keyValPair = state.find(it.first);
-            if(keyValPair!= state.end()) {
-                keyValPair->second += it.second;
-            }else{
-                state.insert({it.first,it.second});
-            }
-        }
-}
-bool validateState(std::map<int,int> state, std::map<int,int> transaction){
-    bool returner = true;
-    int total = 0;
-    for(auto & it : transaction){
-        total += it.second;
-        auto keyValPair = state.find(it.first);
-        if(keyValPair!= state.end() && keyValPair->second < it.second * -1) {
-            returner = false;
-        }
-    }
-    if(total != 0){
-        returner = false;
-    }
-    return returner;
-}
-
 
 std::map<int, int> generateTransactions(int MaxVal) {
     std::uniform_int_distribution<int> distro(0, MaxVal);
