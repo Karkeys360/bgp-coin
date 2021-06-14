@@ -51,11 +51,11 @@ void BlockContents::dump()
     std::cerr << "Transactions: " << std::endl;
 
     for (auto transaction : transactions) {
-        std::cout << "New Transaction:" << std::endl;
+        std::cerr << "New Transaction:" << std::endl;
         for (auto change : transaction) {
-            std::cout << change.first << ": " << change.second << std::endl;
+            std::cerr << change.first << ": " << change.second << std::endl;
         }
-        std::cout << std::endl;
+        std::cerr << std::endl;
     }
 }
 
