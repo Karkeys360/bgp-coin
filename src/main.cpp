@@ -11,6 +11,10 @@ std::uniform_int_distribution<int> uni(0, 3);
 
 std::map<int, int> generateTransactions(int MaxVal);
 
+void updateState(std::map<int, int> state, std::map<int, int> transaction);
+
+bool validateState(std::map<int, int> state, std::map<int, int> transaction);
+
 int main()
 {
     // Random ledger generation test
@@ -23,12 +27,22 @@ int main()
         transactions.push_back(temp);
     }
 
-    BlockChain blockChain;
-    blockChain.transactionsToBlocks(transactions);
+    // String hashing test
 
-    for(auto it = blockChain.getChain().begin(); i < blockChain.getChain().end(); it++){
-        BlockContents contents = it -> getContents();
-        contents.dump();
+    std::string src_str = "Hello World!";
+    std::string hash_str;
+
+    picosha2::hash256_hex_string(src_str, hash_str);
+
+    std::cout << hash_str << std::endl << std::endl;
+
+    // Blockchain test
+
+    BlockChain b;
+    std::list<Block> l = b.getChain();
+    for (Block block : l) {
+        std::cout << "Block Hash: " << block.getHash() << std::endl;
+        block.getContents().dump();
     }
 
     return 0;

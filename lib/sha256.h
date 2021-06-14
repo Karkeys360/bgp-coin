@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <sstream>
 #include <vector>
 #include <fstream>
-namespace sha256 {
+namespace picosha2 {
     typedef unsigned long word_t;
     typedef unsigned char byte_t;
 

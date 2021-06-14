@@ -21,12 +21,12 @@ std::string BlockContents::hash_contents()
         }
     }
 
-    sha256::hash256_hex_string(to_hash, hash_transactions);
+    picosha2::hash256_hex_string(to_hash, hash_transactions);
 
     to_hash = std::to_string(block_number) + "." + parent_hash + "." + std::to_string(transaction_count) + "." +
               hash_transactions;
 
-    sha256::hash256_hex_string(to_hash, hash_contents);
+    picosha2::hash256_hex_string(to_hash, hash_contents);
 
     return hash_contents;
 }
@@ -91,28 +91,28 @@ BlockChain::BlockChain()
 }
 
 
-void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
-{
-    std::map<int, int> currentState = state;
-    int transactionLim = 3; // transactions per block
-    int counter = 0;
-    std::list<std::map<int, int>> transList;
-    for (auto it = trans.begin(); it != trans.end(); it++) {
-        if (validateState(currentState, *it)) {
-            updateState(currentState, *it);
-            transList.push_back(*it);
-            counter++;
-        }
-        if (counter == transactionLim) {
-            counter = 0;
-            makeBlock(transList, chain);
-            transList.clear();
-        }
-
-    }
-
-    state = currentState;
-}
+//void BlockChain::transactionsToBlocks(std::list<std::map<int, int>> trans)
+//{
+//    std::map<int, int> currentState = state;
+//    int transactionLim = 3; // transactions per block
+//    int counter = 0;
+//    std::list<std::map<int, int>> transList;
+//    for (auto it = trans.begin(); it != trans.end(); it++) {
+//        if (validateState(currentState, *it)) {
+//            updateState(currentState, *it);
+//            transList.push_back(*it);
+//            counter++;
+//        }
+//        if (counter == transactionLim) {
+//            counter = 0;
+//            makeBlock(transList, chain);
+//            transList.clear();
+//        }
+//
+//    }
+//
+//    state = currentState;
+//}
 
 
 std::list<Block> BlockChain::getChain()
