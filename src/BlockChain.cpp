@@ -24,14 +24,14 @@ std::string BlockContents::hash_contents()
     sha256::hash256_hex_string(to_hash, hash_transactions);
 
     to_hash = std::to_string(block_number) + "." + parent_hash + "." + std::to_string(transaction_count) + "." +
-                          hash_transactions;
+              hash_transactions;
 
     sha256::hash256_hex_string(to_hash, hash_contents);
 
     return hash_contents;
 }
 
-BlockContents::BlockContents(const BlockContents &contents)
+BlockContents::BlockContents(const BlockContents& contents)
 {
     this->block_number = contents.block_number;
     this->parent_hash = contents.parent_hash;
@@ -39,9 +39,24 @@ BlockContents::BlockContents(const BlockContents &contents)
     std::copy(contents.transactions.begin(), contents.transactions.end(), this->transactions.begin());
 }
 
+int BlockContents::getBlockNumber()
+{
+    return this->block_number;
+}
+
 Block::Block(std::string new_hash, BlockContents new_contents) : contents(new_contents)
 {
     this->block_hash = new_hash;
+}
+
+std::string Block::getHash()
+{
+    return this->block_hash;
+}
+
+BlockContents Block::getContents()
+{
+    return this->contents;
 }
 
 BlockChain::BlockChain()
