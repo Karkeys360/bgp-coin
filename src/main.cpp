@@ -15,10 +15,10 @@ int main()
 {
     // Random ledger generation test
 
-    std::list<std::map<int,int>> transactions;
+    std::list<std::map<int, int>> transactions;
 
 
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 1000; i++) {
         std::map<int, int> temp = generateTransactions(i);
         transactions.push_back(temp);
     }
@@ -27,7 +27,7 @@ int main()
 
     std::list<Block> chain = blockChain.getChain();
 
-    for(auto it = chain.begin(); it != chain.end(); it++){
+    for (auto it = chain.begin(); it != chain.end(); it++) {
         it->getContents().dump();
     }
 
