@@ -1,2 +1,2 @@
 # bgp-coin
-Implementing a blockchain algorithm and creating a cryptocurrency.
+Implementing a blockchain algorithm and ledger system.
